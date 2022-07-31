@@ -1,10 +1,14 @@
 package com.example.bmi;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +30,17 @@ public class MainActivity extends AppCompatActivity {
         edWeight = findViewById (R.id.ed_weight);
         edHeight = findViewById (R.id.ed_height);
         result = findViewById (R.id.result);
+        Button help = findViewById (R.id.help);
+        help.setOnClickListener (new View.OnClickListener () {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder (MainActivity.this)
+                        .setTitle ("Help")
+                        .setMessage ("Body mass index (BMI) is a value derived from the mass (weight) and height of a person")
+                        .setPositiveButton ("OK", null)
+                        .show ();
+            }
+        });
     }
 
     public void bmi(View view) {
@@ -37,5 +52,16 @@ public class MainActivity extends AppCompatActivity {
         Log.d ("MainActivity", "BMI : " + bmi);
         Toast.makeText (this, "Your BMI is " + bmi, Toast.LENGTH_LONG).show ();
         result.setText ("Your BMI is " + bmi);
+        AlertDialog alertDialog = new AlertDialog.Builder (this)
+                .setTitle ("BMI")
+                .setMessage ("Your BMI is " + bmi)
+                .setPositiveButton ("OK", new DialogInterface.OnClickListener () {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        edWeight.setText ("");
+                        edHeight.setText ("");
+                    }
+                })
+                .show ();
     }
 }
