@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -53,16 +54,19 @@ public class MainActivity extends AppCompatActivity {
         Log.d ("MainActivity", "BMI : " + bmi);
         Toast.makeText (this, "Your BMI is " + bmi, Toast.LENGTH_LONG).show ();
         result.setText (getString(R.string.your_bmi_is) + bmi);
-        AlertDialog alertDialog = new AlertDialog.Builder (this)
-                .setTitle ("BMI")
-                .setMessage (getString(R.string.your_bmi_is) + bmi)
-                .setPositiveButton (getString(R.string.ok), new DialogInterface.OnClickListener () {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        edWeight.setText ("");
-                        edHeight.setText ("");
-                    }
-                })
-                .show ();
+        Intent intent = new Intent(this, ResultActivity.class);
+        intent.putExtra("BMI", bmi);
+        startActivity(intent);
+//        AlertDialog alertDialog = new AlertDialog.Builder (this)
+//                .setTitle ("BMI")
+//                .setMessage (getString(R.string.your_bmi_is) + bmi)
+//                .setPositiveButton (getString(R.string.ok), new DialogInterface.OnClickListener () {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        edWeight.setText ("");
+//                        edHeight.setText ("");
+//                    }
+//                })
+//                .show ();
     }
 }
