@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Bmi</string>
+    <string name="help">幫助</string>
+    <string name="hello">哈囉</string>
+    <string name="bmi_info">身體質量指數（英語：Body Mass Index，簡稱BMI）又稱凱特萊指數（Quetelet index，/kɛtəˈleɪ/[1]），簡稱體質指數，是由一個人的質量（體重）和身高計算出的一個數值。</string>
+    <string name="ok">確認</string>
+    <string name="your_bmi_is">"您的BMI值 "</string>
+    <string name="weight">體重</string>
+    <string name="height">身高</string>
+    <string name="calculate_bmi">計算BMI值</string>
+</resources>
