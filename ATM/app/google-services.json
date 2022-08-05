@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "624720144750",
+    "firebase_url": "https://atm20-9703b-default-rtdb.firebaseio.com",
+    "project_id": "atm20-9703b",
+    "storage_bucket": "atm20-9703b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:624720144750:android:564badc2b231b03072b97f",
+        "android_client_info": {
+          "package_name": "com.calvin.atm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "624720144750-c32c2u9a5trlvmgr48vmtc1aobgtfdae.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDihtCsA6uD5-9qCODlYmcvs7dJmJv3vJk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "624720144750-c32c2u9a5trlvmgr48vmtc1aobgtfdae.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
