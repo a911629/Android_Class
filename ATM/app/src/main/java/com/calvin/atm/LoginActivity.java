@@ -26,8 +26,19 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG, "calvin onCreate: In LoginActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+//        getSharedPreferences("atm", MODE_PRIVATE)
+//                .edit()
+//                .putInt("LEVEL",3)
+//                .putString("NAME", "Tom")
+//                .commit();
+//        int level = getSharedPreferences("atm", MODE_PRIVATE)
+//                .getInt("LEVEL", 0);
+//        Log.d(TAG, "onCreate: " + level);
         edUserid = findViewById(R.id.edUserID);
-        edPasswd = findViewById(R.id.edUserPasswd);
+//        edPasswd = findViewById(R.id.edUserPasswd);
+        String userid = getSharedPreferences("atm", MODE_PRIVATE)
+                .getString("USERID","");
+        edUserid.setText(userid);
     }
 
     public void login(View view) {
@@ -40,6 +51,10 @@ public class LoginActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String pw = snapshot.getValue().toString();
                         if(pw.equals(passwd)) {
+                            getSharedPreferences("atm", MODE_PRIVATE)
+                                    .edit()
+                                    .putString("USERID", userid)
+                                    .apply();
                             setResult(RESULT_OK);
                             finish();
                         } else {
