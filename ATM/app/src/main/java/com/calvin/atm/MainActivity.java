@@ -16,6 +16,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.calvin.atm.databinding.ActivityMainBinding;
 
@@ -55,6 +57,13 @@ public class MainActivity extends AppCompatActivity {
 //                               }
 //        );
 
+        //Recycler
+        RecyclerView recyclerView = findViewById(R.id.recycler);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //Adapter
+        FunctionAdapter adapter = new FunctionAdapter(this);
+        recyclerView.setAdapter(adapter);
         if(!logon) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivityForResult(intent, REQUEST_LOGIN);
