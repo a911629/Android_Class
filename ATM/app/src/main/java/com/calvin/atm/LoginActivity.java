@@ -2,9 +2,16 @@ package com.calvin.atm;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -17,9 +24,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import static android.content.ContentValues.TAG;
+import static android.os.Parcelable.PARCELABLE_WRITE_RETURN_VALUE;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private static final int REQUEST_CODE_CAMERA = 5;
     private EditText edUserid;
     private EditText edPasswd;
     private CheckBox cbRemember;
@@ -29,14 +38,16 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG, "calvin onCreate: In LoginActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-//        getSharedPreferences("atm", MODE_PRIVATE)
-//                .edit()
-//                .putInt("LEVEL",3)
-//                .putString("NAME", "Tom")
-//                .commit();
-//        int level = getSharedPreferences("atm", MODE_PRIVATE)
-//                .getInt("LEVEL", 0);
-//        Log.d(TAG, "onCreate: " + level);
+
+//        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+//        if(permission == PackageManager.PERMISSION_GRANTED){
+////            takePhoto();
+//        } else {
+//            Log.d(TAG, "onCreate: calvin not allow");
+//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
+//                    REQUEST_CODE_CAMERA);
+//        }
+
         edUserid = findViewById(R.id.edUserID);
         edPasswd = findViewById(R.id.edUserPasswd);
         cbRemember = findViewById(R.id.cb_rem_userid);
@@ -53,6 +64,21 @@ public class LoginActivity extends AppCompatActivity {
         String userid = getSharedPreferences("atm", MODE_PRIVATE)
                 .getString("USERID","");
         edUserid.setText(userid);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == REQUEST_CODE_CAMERA) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                takePhoto();
+            }
+        }
+    }
+
+    private void takePhoto() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivity(intent);
     }
 
     public void login(View view) {
