@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -12,11 +14,22 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContactActivity extends AppCompatActivity {
 
     private static final int REQUEST_CONTACTS = 80;
     private static final String TAG = ContactActivity.class.getSimpleName();
+    private List<Contact> contacts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +49,14 @@ public class ContactActivity extends AppCompatActivity {
     private void readContacts() {
         Cursor cursor = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
                 null, null, null, null);
+        contacts = new ArrayList<>();
         while(cursor.moveToNext()) {
             String phone = "";
             @SuppressLint("Range") int id = cursor.getInt(
                     cursor.getColumnIndex(ContactsContract.Contacts._ID));
             @SuppressLint("Range") String name = cursor.getString(
                     cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+            Contact contact = new Contact(id, name);
             @SuppressLint("Range") int hasPhone = cursor.getInt(
                     cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
             if (hasPhone == 1) {
@@ -51,13 +66,81 @@ public class ContactActivity extends AppCompatActivity {
                         new String[]{String.valueOf(id)}, null);
                 while (cursor2.moveToNext()) {
                     phone = cursor2.getString(cursor2.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DATA));
+                    contact.getPhones().add(phone);
                 }
             }
+            contacts.add(contact);
+        }
+        ContactAdapter adapter = new ContactAdapter(contacts);
+        RecyclerView recyclerView = findViewById(R.id.recycler);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+    }
 
-            Log.d(TAG, "readContacts: " + name + "phone : " + phone);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_contact, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.actine_upload) {
+            String userid = getSharedPreferences("atm", MODE_PRIVATE)
+                    .getString("USERID", null);
+            if (userid != null) {
+                FirebaseDatabase.getInstance().getReference("users")
+                        .child(userid)
+                        .child("contacts")
+                        .setValue(contacts);
+            }
+
+            Log.d(TAG, "onOptionsItemSelected: upload");
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactHolder> {
+        List<Contact> contacts;
+
+        public ContactAdapter(List<Contact> contacts) {
+            this.contacts = contacts;
         }
 
+        @NonNull
+        @Override
+        public ContactHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = getLayoutInflater().inflate(android.R.layout.simple_list_item_2, parent, false);
+            return new ContactHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ContactHolder holder, int position) {
+            Contact contact = contacts.get(position);
+            holder.nameText.setText(contact.getName());
+            StringBuilder sb = new StringBuilder();
+            for (String phone : contact.getPhones()) {
+                sb.append(phone);
+                sb.append(" ");
+            }
+            holder.phoneText.setText(sb.toString());
+        }
+
+        @Override
+        public int getItemCount() {
+            return contacts.size();
+        }
+
+        public class ContactHolder extends RecyclerView.ViewHolder{
+            TextView nameText;
+            TextView phoneText;
+            public ContactHolder(@NonNull View itemView) {
+                super(itemView);
+                nameText = itemView.findViewById(android.R.id.text1);
+                phoneText = itemView.findViewById(android.R.id.text2);
+            }
+        }
     }
 
     @Override
