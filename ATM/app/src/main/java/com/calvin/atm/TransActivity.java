@@ -2,15 +2,20 @@ package com.calvin.atm;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.TypedArrayKt;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.SurfaceControl;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,6 +25,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -27,7 +33,6 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.OkHttp;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -36,12 +41,13 @@ public class TransActivity extends AppCompatActivity {
 
     private static final String TAG = TransActivity.class.getSimpleName();
     private RecyclerView recyclerView;
+    private List<Transaction> transactions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trans);
-        recyclerView = findViewById(R.id.recycle_trans);
+        recyclerView = findViewById(R.id.recycler_trans);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -58,42 +64,67 @@ public class TransActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                Log.d(TAG, "onResponse: " + response.body().string());
-//                parseJson(response.body().string());
+                String json = response.body().string();
+                Log.d(TAG, "onResponse: " + json);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+//                        parseJson(json);
+                        parseGson(json);
+                    }
+                });
             }
         });
     }
 
+    private void parseGson(String json) {
+        Gson gson = new Gson();
+        transactions = gson.fromJson(json,
+                new TypeToken<ArrayList<Transaction>>(){}.getType());
+        TransAdapter adapter = new TransAdapter();
+        recyclerView.setAdapter(adapter);
+    }
+
     private void parseJson(String json) {
-        List<Transaction> transactions = new ArrayList<>();
+        transactions = getTransactions();
         try {
             JSONArray array = new JSONArray(json);
             for (int i = 0; i < array.length(); i++) {
                 JSONObject object = array.getJSONObject(i);
-//                Transaction tran = new Transaction(object);
+                Transaction tran = new Transaction(object);
                 transactions.add(new Transaction(object));
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        TransAdapter adapter = new TransAdapter();
+        recyclerView.setAdapter(adapter);
     }
 
-    public class TransAdapter extends RecyclerView.Adapter {
+    @NonNull
+    private List<Transaction> getTransactions() {
+        List<Transaction> transactions = new ArrayList<>();
+        return transactions;
+    }
+
+    public class TransAdapter extends RecyclerView.Adapter<TransAdapter.TransHolder> {
 
         @NonNull
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return null;
+        public TransHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = getLayoutInflater().inflate(R.layout.item_transaction, parent, false);
+            return new TransHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
+        public void onBindViewHolder(@NonNull TransHolder holder, int position) {
+            Transaction tran = transactions.get(position);
+            holder.bindTo(tran);
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            return transactions.size();
         }
 
         public class TransHolder extends RecyclerView.ViewHolder {
@@ -105,6 +136,12 @@ public class TransActivity extends AppCompatActivity {
                 dateText = itemView.findViewById(R.id.trans_date);
                 amountText = itemView.findViewById(R.id.trans_amount);
                 typeText = itemView.findViewById(R.id.trans_type);
+            }
+
+            public void bindTo(Transaction tran) {
+                dateText.setText(tran.getDate());
+                amountText.setText(String.valueOf(tran.getAmount()));
+                typeText.setText(String.valueOf(tran.getType()));
             }
         }
     }
