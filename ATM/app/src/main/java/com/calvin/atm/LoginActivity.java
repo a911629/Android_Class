@@ -2,7 +2,10 @@ package com.calvin.atm;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,6 +21,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText edUserid;
     private EditText edPasswd;
     private CheckBox cbRemember;
+    private Intent helloService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +50,46 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //Fragment
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = manager.beginTransaction();
+        fragmentTransaction.add(R.id.container_news, NewsFragment.getInstance());
+        fragmentTransaction.commit();
+
+        //service
+        helloService = new Intent(this, HelloService.class);
+        helloService.putExtra("NAME", "T1");
+        startService(helloService);
+        helloService.putExtra("NAME", "T2");
+        startService(helloService);
+        helloService.putExtra("NAME", "T3");
+        startService(helloService);
+
 //        camera();
 
         findViews();
         new TestTask().execute("http://tw.yahoo.com");
+    }
+
+    BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "onReceive: " + intent.getAction());
+        }
+    };
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter filter = new IntentFilter(HelloService.ACTION_HELLO_DONE);
+        registerReceiver(receiver, filter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopService(helloService);
+        unregisterReceiver(receiver);
     }
 
     public class TestTask extends AsyncTask<String, Void, Integer> {
