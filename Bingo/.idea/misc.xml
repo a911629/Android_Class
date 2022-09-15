@@ -3,7 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/Android_Class/Bingo/app/src/main/res/drawable/circle_buttom.xml" value="0.1715" />
+        <entry key="..\:/AndroidStudioProjects/Android_Class/Bingo/app/src/main/res/layout/activity_bingo.xml" value="0.33" />
+        <entry key="..\:/AndroidStudioProjects/Android_Class/Bingo/app/src/main/res/layout/activity_main.xml" value="0.358695652173913" />
+        <entry key="..\:/AndroidStudioProjects/Android_Class/Bingo/app/src/main/res/layout/content_main.xml" value="0.22121896162528218" />
         <entry key="..\:/AndroidStudioProjects/Android_Class/Bingo/app/src/main/res/layout/fragment_first.xml" value="0.22" />
+        <entry key="..\:/AndroidStudioProjects/Android_Class/Bingo/app/src/main/res/layout/item_room.xml" value="0.22864583333333333" />
+        <entry key="..\:/AndroidStudioProjects/Android_Class/Bingo/app/src/main/res/layout/number_item.xml" value="0.2296875" />
         <entry key="..\:/AndroidStudioProjects/Android_Class/Bingo/app/src/main/res/menu/menu_main.xml" value="0.1875" />
       </map>
     </option>
