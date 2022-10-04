@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "907403329819",
-    "project_id": "bingo-66fa7",
-    "storage_bucket": "bingo-66fa7.appspot.com"
+    "project_number": "705918873301",
+    "project_id": "bingo-bfbf4",
+    "storage_bucket": "bingo-bfbf4.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:907403329819:android:73b0f3dacd567efa4c13be",
+        "mobilesdk_app_id": "1:705918873301:android:71c527c76c4001c9ea3c5c",
         "android_client_info": {
-          "package_name": "com.calvin.bingo"
+          "package_name": "com.example.bingo"
         }
       },
       "oauth_client": [
         {
-          "client_id": "907403329819-qbfol60nab7flefd44lr2c1vabco70v5.apps.googleusercontent.com",
+          "client_id": "705918873301-9469kd8qdpfi8o134vm3g5t8hs8l569k.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBvVn2RvqdwmR0F4ZeUTyBdU2vDk-r5Nhw"
+          "current_key": "AIzaSyCHwevU34xKuyQzwShRrrH0EiuiUCDkVmw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "907403329819-qbfol60nab7flefd44lr2c1vabco70v5.apps.googleusercontent.com",
+              "client_id": "705918873301-9469kd8qdpfi8o134vm3g5t8hs8l569k.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
