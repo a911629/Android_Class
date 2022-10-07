@@ -1,5 +1,6 @@
 package com.example.bingo;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -78,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
 //        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-
         //資料庫新增資料用
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
                             Room room = new Room(roomTitle, member);
                             roomRef.setValue(room);
                             String key = roomRef.getKey();
-                            Log.d(TAG, "onClick: Room key" + key);
+                            Log.d(TAG, "onClick: Room key | " + key);
                             roomRef.child("key").setValue(key);
 //                            //enter game
                             Intent bingo = new Intent(MainActivity.this, BingoActivity.class);
@@ -242,7 +243,9 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
     @Override
     public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
         user = firebaseAuth.getCurrentUser();
+        Log.d(TAG, "onAuthStateChanged: calvin user : " + user);
         if (user != null) {
+            Log.d(TAG, "onAuthStateChanged: go if");
             Member member = new Member();
             member.setNickName(user.getDisplayName());
             FirebaseDatabase.getInstance()
@@ -271,12 +274,17 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
                         .addValueEventListener(this);
 //            }
         } else {
+            Log.d(TAG, "onAuthStateChanged: go else start");
+            // 新方法
+
+            //課程方法
             startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder()
             .setAvailableProviders(Arrays.asList(
-                new AuthUI.IdpConfig.EmailBuilder().build(),
-                new AuthUI.IdpConfig.GoogleBuilder().build()
+                new AuthUI.IdpConfig.EmailBuilder().build()
+//                new AuthUI.IdpConfig.GoogleBuilder().build()
             )).setIsSmartLockEnabled(false).build(),
                 RC_SIGN_IN);
+            Log.d(TAG, "onAuthStateChanged: go else end");
         }
     }
 

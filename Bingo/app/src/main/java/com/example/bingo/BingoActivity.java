@@ -1,6 +1,7 @@
 package com.example.bingo;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import com.example.bingo.databinding.ActivityBingoBinding;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -51,6 +53,7 @@ public class BingoActivity extends AppCompatActivity implements ValueEventListen
     }
 
     private boolean myTurn = false;
+
     private ValueEventListener statusListener = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -64,7 +67,8 @@ public class BingoActivity extends AppCompatActivity implements ValueEventListen
                 case Room.STATS_JOINED:
                     info.setText("對手加入");
                     if (isCreator()) {
-                        myTurn = true;
+                        setMyTurn(true);
+                        Log.d(TAG, "onDataChange: set true 1");
                         FirebaseDatabase.getInstance().getReference("rooms")
                                 .child(roomKey)
                                 .child("status")
@@ -76,10 +80,11 @@ public class BingoActivity extends AppCompatActivity implements ValueEventListen
                     break;
                 case Room.STATS_JOINERS_TURN:
                     info.setText(!isCreator() ? "請選擇號碼" : "等待對手選號");
-                    setMyTurn(true);
+                        setMyTurn(true);
+                        Log.d(TAG, "onDataChange: set true 2");
                     break;
                 case Room.STATS_CREATOR_BINGO:
-                    String msg = isCreator()?"你賓果了!" :"對方賓果了!";
+                    String msg = isCreator() ? "你賓果了!" : "對方賓果了!";
                     new AlertDialog.Builder(BingoActivity.this)
                             .setTitle("賓果")
                             .setMessage(msg)
@@ -91,7 +96,7 @@ public class BingoActivity extends AppCompatActivity implements ValueEventListen
                             }).show();
                     break;
                 case Room.STATS_JOINER_BINGO:
-                    String msg2 = !isCreator()?"你賓果了!" :"對方賓果了!";
+                    String msg2 = !isCreator() ? "你賓果了!" : "對方賓果了!";
                     new AlertDialog.Builder(BingoActivity.this)
                             .setTitle("賓果")
                             .setMessage(msg2)
@@ -112,11 +117,14 @@ public class BingoActivity extends AppCompatActivity implements ValueEventListen
     };
 
     private void finishGame() {
-        if (isCreator()) {
-            FirebaseDatabase.getInstance().getReference("rooms")
-                    .child(roomKey)
-                    .removeValue();
-        }
+//        if (isCreator()) {
+        Log.d(TAG, "finishGame: remove game start");
+        Log.d(TAG, "finishGame: game roomkey | " + roomKey + " |");
+        FirebaseDatabase.getInstance().getReference("rooms")
+                .child(roomKey)
+                .removeValue();
+        Log.d(TAG, "finishGame: remove game done");
+//        }
 //        finish();
         System.exit(0);
     }
@@ -159,7 +167,6 @@ public class BingoActivity extends AppCompatActivity implements ValueEventListen
                 .child(roomKey)
                 .child("numbers")
                 .addValueEventListener(this);
-        //這裡錯誤 roomKey為空 往上
         FirebaseDatabase.getInstance().getReference("rooms")
                 .child(roomKey)
                 .child("status")
@@ -230,12 +237,12 @@ public class BingoActivity extends AppCompatActivity implements ValueEventListen
                 if (sum == 5)
                     bingo++;
             }
-            Log.d(TAG, "onDataChange: bingo:" + bingo);
-            if(bingo > 0) {
+//            Log.d(TAG, "onDataChange: bingo:" + bingo);
+            if (bingo > 0) {
                 FirebaseDatabase.getInstance().getReference("rooms")
                         .child(roomKey)
                         .child("status")
-                        .setValue(isCreator()? Room.STATS_CREATOR_BINGO :Room.STATS_JOINER_BINGO);
+                        .setValue(isCreator() ? Room.STATS_CREATOR_BINGO : Room.STATS_JOINER_BINGO);
             }
         }
     }
@@ -260,19 +267,20 @@ public class BingoActivity extends AppCompatActivity implements ValueEventListen
             holder.button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(myTurn) {
+                    if (myTurn) {
                         Log.d(TAG, "onClick: number:" + numbers.get(position));
+                        setMyTurn(false);
+                        Log.d(TAG, "onClick: set false 1");
+                        holder.button.setEnabled(false);
                         FirebaseDatabase.getInstance().getReference("rooms")
                                 .child(roomKey)
                                 .child("numbers")
                                 .child(numbers.get(position).getNumber() + "")
                                 .setValue(true);
-                        holder.button.setEnabled(false);
                         FirebaseDatabase.getInstance().getReference("rooms")
                                 .child(roomKey)
                                 .child("status")
-                                .setValue(isCreator()? Room.STATS_JOINERS_TURN: Room.STATS_CREATORS_TURN);
-                        setMyTurn(false);
+                                .setValue(isCreator() ? Room.STATS_JOINERS_TURN : Room.STATS_CREATORS_TURN);
                     }
                 }
             });
