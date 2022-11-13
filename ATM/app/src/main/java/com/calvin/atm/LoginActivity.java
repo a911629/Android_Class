@@ -142,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
     private void camera() {
         int permission = ContextCompat.checkSelfPermission (this, Manifest.permission.CAMERA);
         if (permission == PackageManager.PERMISSION_GRANTED) {
-//            takePhoto();
+           takePhoto();
         } else {
             ActivityCompat.requestPermissions (this, new String[]{Manifest.permission.CAMERA},
                     REQUEST_CODE_CAMERA);
