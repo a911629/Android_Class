@@ -22,6 +22,10 @@ public class NewsFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_news, container, false);
     }
 
+    /**
+     * 回傳
+     * @return instance
+     */
     public static NewsFragment getInstance() {
         if (instance == null){
             instance = new NewsFragment();

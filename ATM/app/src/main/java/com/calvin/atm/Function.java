@@ -1,5 +1,8 @@
 package com.calvin.atm;
 
+/**
+ * 選項類別
+ */
 public class Function {
     String name;
     int icon;

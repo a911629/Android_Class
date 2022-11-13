@@ -25,11 +25,14 @@ public class AddActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * 新增資料
+     * @param view
+     */
     public void add(View view) {
         String date = edDate.getText().toString();
         String info = edInfo.getText().toString();
         int amount = Integer.parseInt(edAmount.getText().toString());
-//        ExpenseHelper helper = new ExpenseHelper(this, "atm", null, 1); 因為ExpenseHelper有新增建構子，這個舊的建構方式改為private了，改為以下方式。
         ExpenseHelper helper = new ExpenseHelper(this);
         ContentValues values = new ContentValues();
         values.put("cdate", date);

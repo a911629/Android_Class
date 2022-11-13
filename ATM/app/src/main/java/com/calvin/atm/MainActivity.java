@@ -31,49 +31,32 @@ public class MainActivity extends AppCompatActivity {
     boolean logon = false;
     private List<Function> functions;
 
-//    private AppBarConfiguration appBarConfiguration;
-//    private ActivityMainBinding binding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "calivn onCreate: In MainActivity");
         super.onCreate(savedInstanceState);
 
-//        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(R.layout.activity_main);
 
-//        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//                                   @Override
-//                                   public void onClick(View v) {
-//                                       Snackbar.make(v, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                                               .setAction("Action", null).show();
-//                                   }
-//                               }
-//        );
-
-        //Recycler
+        //RecyclerView
         setupFunctions();
 
         RecyclerView recyclerView = findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(true);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        //Adapter
-//        FunctionAdapter adapter = new FunctionAdapter(this);
+
         IconAdapter adapter = new IconAdapter();
         recyclerView.setAdapter(adapter);
         if(!logon) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivityForResult(intent, REQUEST_LOGIN);
-//            startActivity(intent);
         }
 
     }
 
+    /**
+     * 設定選項圖片
+     */
     private void setupFunctions() {
         functions = new ArrayList<>();
         String[] funcs = getResources().getStringArray(R.array.functions);
@@ -121,6 +104,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 設定選項的點擊事件
+     * @param function
+     */
     private void itemClicked(Function function) {
         Log.d(TAG, "itemClicked: " + function.name);
         switch (function.getIcon()) {
@@ -163,12 +150,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -178,9 +161,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-//        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-//        return NavigationUI.navigateUp(navController, appBarConfiguration)
-//                || super.onSupportNavigateUp();
         return true;
     }
 }

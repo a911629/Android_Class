@@ -27,6 +27,9 @@ public class MainActivity extends AppCompatActivity {
         super();
     }
 
+    /**
+     * 取得元件
+     */
     private void findViews() {
         edWeight = findViewById (R.id.ed_weight);
         edHeight = findViewById (R.id.ed_height);
@@ -44,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 計算BMI數值
+     * @param view
+     */
     public void bmi(View view) {
         String w = edWeight.getText ().toString ();
         String h = edHeight.getText ().toString ();
