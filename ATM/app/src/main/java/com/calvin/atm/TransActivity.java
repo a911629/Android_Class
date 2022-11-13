@@ -51,7 +51,6 @@ public class TransActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-//        new TransTask().execute("http://atm201605.appspot.com/h");
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url("http://atm201605.appspot.com/h")
@@ -69,7 +68,6 @@ public class TransActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-//                        parseJson(json);
                         parseGson(json);
                     }
                 });
